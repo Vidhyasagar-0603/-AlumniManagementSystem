@@ -1,0 +1,298 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+// Alumni Class: Holds alumni information
+class Alumni {
+    private String name;
+    private String email;
+    private String password;  // Storing password for login
+    private String graduationYear;
+    private String department;
+    private String phoneNumber;
+    private String address;
+    private String jobTitle;
+    private String company;
+    private String linkedInProfile;
+    private String achievements;
+    private String hobbies;
+
+    // Constructor to initialize all fields
+    public Alumni(String name, String email, String password, String graduationYear,
+                  String department, String phoneNumber, String address,
+                  String jobTitle, String company, String linkedInProfile,
+                  String achievements, String hobbies) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.graduationYear = graduationYear;
+        this.department = department;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.linkedInProfile = linkedInProfile;
+        this.achievements = achievements;
+        this.hobbies = hobbies;
+    }
+
+    // Getters for all fields
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public String getGraduationYear() { return graduationYear; }
+    public String getDepartment() { return department; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getAddress() { return address; }
+    public String getJobTitle() { return jobTitle; }
+    public String getCompany() { return company; }
+    public String getLinkedInProfile() { return linkedInProfile; }
+    public String getAchievements() { return achievements; }
+    public String getHobbies() { return hobbies; }
+}
+
+// Alumni Data Management Class
+class AlumniData {
+    private static ArrayList<Alumni> alumniList = new ArrayList<>();
+
+    public static void addAlumni(Alumni alumni) {
+        alumniList.add(alumni);
+    }
+
+    public static ArrayList<Alumni> getAlumniList() {
+        return alumniList;
+    }
+
+    public static Alumni authenticate(String email, String password) {
+        for (Alumni alumni : alumniList) {
+            if (alumni.getEmail().equals(email) && alumni.getPassword().equals(password)) {
+                return alumni;
+            }
+        }
+        return null;
+    }
+}
+
+// Main Application Class
+public class AlumniManagementSystemUI {
+
+    private static JFrame frame;
+    private static CardLayout cardLayout;
+    private static JTextField nameField, emailField, graduationYearField, departmentField, phoneField, addressField;
+    private static JTextField jobTitleField, companyField, linkedInField, achievementsField, hobbiesField;
+    private static JTextField loginEmailField;
+    private static JPasswordField loginPasswordField;
+
+    public static void main(String[] args) {
+        frame = new JFrame("Alumni Portal");
+        cardLayout = new CardLayout();
+        frame.setLayout(cardLayout);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 400);
+
+        JPanel registerPanel = createRegisterPanel();
+        frame.getContentPane().add(registerPanel, "Register");
+
+        JPanel loginPanel = createLoginPanel();
+        frame.getContentPane().add(loginPanel, "Login");
+
+        cardLayout.show(frame.getContentPane(), "Login");
+
+        frame.setVisible(true);
+    }
+
+    private static JPanel createRegisterPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(14, 2));
+
+        panel.add(new JLabel("Name:"));
+        nameField = new JTextField();
+        panel.add(nameField);
+
+        panel.add(new JLabel("Email:"));
+        emailField = new JTextField();
+        panel.add(emailField);
+
+        panel.add(new JLabel("Password:"));
+        JPasswordField passwordField = new JPasswordField();
+        panel.add(passwordField);
+
+        panel.add(new JLabel("Graduation Year:"));
+        graduationYearField = new JTextField();
+        panel.add(graduationYearField);
+
+        panel.add(new JLabel("Department:"));
+        departmentField = new JTextField();
+        panel.add(departmentField);
+
+        panel.add(new JLabel("Phone Number:"));
+        phoneField = new JTextField();
+        panel.add(phoneField);
+
+        panel.add(new JLabel("Address:"));
+        addressField = new JTextField();
+        panel.add(addressField);
+
+        panel.add(new JLabel("Job Title:"));
+        jobTitleField = new JTextField();
+        panel.add(jobTitleField);
+
+        panel.add(new JLabel("Company:"));
+        companyField = new JTextField();
+        panel.add(companyField);
+
+        panel.add(new JLabel("LinkedIn Profile:"));
+        linkedInField = new JTextField();
+        panel.add(linkedInField);
+
+        panel.add(new JLabel("Achievements:"));
+        achievementsField = new JTextField();
+        panel.add(achievementsField);
+
+        panel.add(new JLabel("Hobbies:"));
+        hobbiesField = new JTextField();
+        panel.add(hobbiesField);
+
+        JButton registerButton = new JButton("Register");
+        panel.add(registerButton);
+
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String email = emailField.getText();
+                String password = new String(passwordField.getPassword());
+                String graduationYear = graduationYearField.getText();
+                String department = departmentField.getText();
+                String phone = phoneField.getText();
+                String address = addressField.getText();
+                String jobTitle = jobTitleField.getText();
+                String company = companyField.getText();
+                String linkedIn = linkedInField.getText();
+                String achievements = achievementsField.getText();
+                String hobbies = hobbiesField.getText();
+
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty() || graduationYear.isEmpty() ||
+                        department.isEmpty() || phone.isEmpty() || address.isEmpty() || jobTitle.isEmpty() ||
+                        company.isEmpty() || linkedIn.isEmpty() || achievements.isEmpty() || hobbies.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "All fields must be filled!");
+                    return;
+                }
+
+                Alumni newAlumni = new Alumni(name, email, password, graduationYear, department, phone, address,
+                        jobTitle, company, linkedIn, achievements, hobbies);
+                AlumniData.addAlumni(newAlumni);
+
+                clearRegisterFields();
+                JOptionPane.showMessageDialog(frame, "Registration Successful!");
+            }
+        });
+
+        JButton switchToLoginButton = new JButton("Already have an account? Login");
+        switchToLoginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(frame.getContentPane(), "Login");
+            }
+        });
+        panel.add(switchToLoginButton);
+
+        return panel;
+    }
+
+    private static void clearRegisterFields() {
+        nameField.setText("");
+        emailField.setText("");
+        graduationYearField.setText("");
+        departmentField.setText("");
+        phoneField.setText("");
+        addressField.setText("");
+        jobTitleField.setText("");
+        companyField.setText("");
+        linkedInField.setText("");
+        achievementsField.setText("");
+        hobbiesField.setText("");
+    }
+
+    private static JPanel createLoginPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(3, 2));
+
+        JLabel emailLabel = new JLabel("Email:");
+        loginEmailField = new JTextField();
+        panel.add(emailLabel);
+        panel.add(loginEmailField);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        loginPasswordField = new JPasswordField();
+        panel.add(passwordLabel);
+        panel.add(loginPasswordField);
+
+        JButton loginButton = new JButton("Login");
+        panel.add(loginButton);
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String email = loginEmailField.getText();
+                String password = new String(loginPasswordField.getPassword());
+
+                Alumni loggedInAlumni = AlumniData.authenticate(email, password);
+
+                if (loggedInAlumni != null) {
+                    showAlumniOptions();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Invalid email or password.");
+                }
+            }
+        });
+
+        JButton switchToRegisterButton = new JButton("New user? Register here");
+        switchToRegisterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(frame.getContentPane(), "Register");
+            }
+        });
+        panel.add(switchToRegisterButton);
+
+        return panel;
+    }
+
+    private static void showAlumniOptions() {
+        JPanel alumniOptionsPanel = new JPanel();
+        alumniOptionsPanel.setLayout(new BorderLayout());
+
+        JButton viewAlumniButton = new JButton("View All Alumni");
+        viewAlumniButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showAllAlumni();
+            }
+        });
+        alumniOptionsPanel.add(viewAlumniButton, BorderLayout.CENTER);
+
+        JOptionPane.showMessageDialog(frame, alumniOptionsPanel, "Welcome, Alumni", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private static void showAllAlumni() {
+        StringBuilder alumniDetails = new StringBuilder();
+
+        for (Alumni alumni : AlumniData.getAlumniList()) {
+            alumniDetails.append("Name: ").append(alumni.getName()).append("\n")
+                    .append("Email: ").append(alumni.getEmail()).append("\n")
+                    .append("Graduation Year: ").append(alumni.getGraduationYear()).append("\n")
+                    .append("Department: ").append(alumni.getDepartment()).append("\n")
+                    .append("Phone: ").append(alumni.getPhoneNumber()).append("\n")
+                    .append("Address: ").append(alumni.getAddress()).append("\n")
+                    .append("Job Title: ").append(alumni.getJobTitle()).append("\n")
+                    .append("Company: ").append(alumni.getCompany()).append("\n")
+                    .append("LinkedIn: ").append(alumni.getLinkedInProfile()).append("\n")
+                    .append("Achievements: ").append(alumni.getAchievements()).append("\n")
+                    .append("Hobbies: ").append(alumni.getHobbies()).append("\n")
+                    .append("----------------------------------------------------\n");
+        }
+
+        JOptionPane.showMessageDialog(frame, alumniDetails.toString(), "All Alumni", JOptionPane.INFORMATION_MESSAGE);
+    }
